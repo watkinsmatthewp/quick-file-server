@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <title>Logs</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link rel="stylesheet" href="./index.css" />
+</head>
+
+<body>
+    <div id="app">
+        <nav class="navbar navbar-expand-md navbar-dark bg-dark fixed-top">
+            <a class="navbar-brand" href="#">{{ title }}</a>
+        </nav>
+    
+        <main role="main">
+            <div class="row">
+                <div class="col-3">
+                    <div id="log-file-list" class="list-group">
+                        <a v-for="logFile in logFiles" class="list-group-item list-group-item-action log-file-list-item" v-bind:class="{ active: logFile.selected }" v-on:click="selectLogFile(logFile.name)">
+                            <span class="file-list-file-name">{{ logFile.name }}</span>
+                            <span class="file-list-file-size text-right font-weight-bold">{{ convertToHumanReadableSize(logFile.sizeBytes) }}</span>
+                        </a>
+                    </div>
+                </div>
+                <div class="col">
+                    <div v-if="selectedLogFile">
+                        <h4>{{ selectedLogFile.name }}</h4>
+                        <div v-if="selectedLogFile.downloadOnly">
+                            This file is too large to display. Right-click <a target="_blank" v-bind:href="'/' + selectedLogFile.name">here</a> and select "Save Link As" to download it.
+                        </div>
+                        <div v-else>
+                            <pre v-if="selectedLogFile.loaded" id="log-content" class="bg-light mt-3 p-2 border border-secondary">{{ selectedLogFile.content }}</pre>
+                            <div v-else class="mt-5 pt-5 text-center">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="sr-only">Loading...</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div v-else>
+                        Select a log from the list on the left
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="./index.js"></script>
+</body>
+
+</html>
